@@ -1,11 +1,13 @@
-import { useState } from "react";
+import {useState} from "react";
 import "./styles/App.css";
+import SingleTask from "./components/SingleTask";
+import Task from "./Task";
 
 let nextId = 3;
 
 function App() {
-  const defaultTasks = [
-    { body: "kill them all", id: 1, done: false },
+  const defaultTasks: Task[] = [
+    { body: "Kill them all", id: 1, done: false },
     { body: "Destroy the world", id: 2, done: false },
     { body: "Be the best version of yourself", id: 3, done: false },
   ];
@@ -14,13 +16,13 @@ function App() {
   const [body, setBody] = useState("");
 
   const tasks = defaultTasksState.map((task) => {
-    // @ts-ignore
     return (
-      <li key={task.id}>
-        {task.body}. <span> done:{task.done.toString()}</span>
-        <button onClick={() => deleteTask(task)}>delete </button>
-        <button onClick={() => doTask(task)}>done</button>
-      </li>
+      <SingleTask
+        key={task.id}
+        task={task}
+        doTask={doTask}
+        deleteTask={deleteTask}
+      ></SingleTask>
     );
   });
 
@@ -36,7 +38,7 @@ function App() {
     setBody("");
   }
 
-  function doTask(task: { body?: string; id?: number; done: any }): void {
+  function doTask(task: Task): void {
     setDefaultTasksState(
       defaultTasksState.map((t) => {
         if (t.id === task.id) t.done = !t.done;
@@ -45,7 +47,7 @@ function App() {
     );
   }
 
-  function deleteTask(task: { id: number; body: string; done: boolean }): void {
+  function deleteTask(task: Task): void {
     setDefaultTasksState(defaultTasksState.filter((t) => t.id !== task.id));
   }
   return (
